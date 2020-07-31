@@ -137,6 +137,7 @@ class SpellCorrectionModel(object):
             # train context model: find most probable correct word for given suggestions for each word in texts
             # based on context word
             self.context_train(data)
+            print('context completed')
 
             data = dict(Counter(" ".join(data).strip().split()))
 

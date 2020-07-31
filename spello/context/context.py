@@ -103,18 +103,19 @@ class ContextModel(object):
         ]
         model_dict_count: Dict[Tuple[str, ...], Union[float, int]] = defaultdict(int)
         model_dict: Dict[Tuple[str, ...], float] = defaultdict(float)
-
+        print('model_dict_count')
         for sentence_tokens in sentences:
             for (pair, _) in get_context_pairs(sentence_tokens):
                 model_dict_count[pair] = min(model_dict_count[pair] + 1, MAX_COUNT_ALLOWED)
-
+        print('default probability')
         self.default_prob = (min(model_dict_count.values()) / float(sum( model_dict_count.values()))) * 0.5
+        print('model dict')
         for tup in model_dict_count:
             model_dict[tup] = model_dict_count[tup] / float(sum( model_dict_count.values()))
-
+        print('class attribute')
         self.model_dict = dict(model_dict)
         self.model_dict_count = dict(model_dict_count)
-
+        print('computed')
         return self.model_dict
 
     def get_most_probable_sentence(

@@ -152,8 +152,7 @@ class PhonemeModel(object):
             (dict): phoneme dict
         """
         phoneme_dict = defaultdict(set)
-        words_soundex = {word: self.get_soundex(word) for word in words_counter if len(word) > 2}
-        for word, soundex in words_soundex.items():
+        for word, soundex in {word: self.get_soundex(word) for word in words_counter if len(word) > 2}.items():
             phoneme_dict[soundex].add(word)
         self.phoneme_dict = phoneme_dict
         return self.phoneme_dict

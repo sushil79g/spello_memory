@@ -124,35 +124,35 @@ class SpellCorrectionModel(object):
 
         logger.debug("Spello training started..")
 
-        words_counter = {}
+        # words_counter = {}
         if not isinstance(data, list) and not isinstance(data, dict):
             raise ValueError('Argument `data` should be either List[str] or Dict[str, int]')
 
         if isinstance(data, list):
-            texts = [get_clean_text(text) for text in data]
-            lower_case_texts = [text.lower() for text in texts]
+            data = [get_clean_text(text) for text in data]
+            # lower_case_texts = [text.lower() for text in texts]
 
             logger.debug("Context model training started ...")
             # Context model get trained only when list of text are given for training
             # train context model: find most probable correct word for given suggestions for each word in texts
             # based on context word
-            self.context_train(lower_case_texts)
+            self.context_train(data)
 
-            words_counter = dict(Counter(" ".join(lower_case_texts).strip().split()))
+            data = dict(Counter(" ".join(data).strip().split()))
 
         elif isinstance(data, dict):
-            words_counter = {word.lower(): count for word, count in data.items()}
+            data = {word.lower(): count for word, count in data.items()}
 
-        words_counter = {word: count for word, count in words_counter.items()
+        data = {word: count for word, count in data.items()
                          if self.config.min_length_for_spellcorrection}
 
         logger.debug("Symspell training started ...")
         # train symspell model: give suggestion based on edit distance
-        self.symspell_train(words_counter)
+        self.symspell_train(data)
 
         logger.debug("Phoneme training started ...")
         # train phoneme model: give suggestion for similar sounding words
-        self.phoneme_train(words_counter)
+        self.phoneme_train(data)
 
         logger.debug("Spello training completed successfully ...")
 

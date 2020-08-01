@@ -85,12 +85,8 @@ class SymSpell:
         Returns:
             new_real_word_added (bool): whether word was added to dictionary i.e. first appearance of word in corpus
         """
-        # check if word is already in dictionary
-        # dictionary entries are in the form: (list of suggested corrections,
-        # frequency of word in corpus)
         new_real_word_added = False
         if w in self.dictionary:
-            # increment count of word in corpus
             if count:
                 self.dictionary[w] = (self.dictionary[w][0], count)
             else:
@@ -100,19 +96,11 @@ class SymSpell:
             self.longest_word_length = max(self.longest_word_length, len(w))
 
         if self.dictionary[w][1] > 0:
-            # first appearance of word in corpus
-            # n.b. word may already be in dictionary as a derived word
-            # (deleting character from a real word)
-            # but counter of frequency of word in corpus is not incremented
-            # in those cases)
             new_real_word_added = True
-            deletes = self.get_deletes_list(w)
-            for item in deletes:
+            for item in self.get_deletes_list(w):
                 if item in self.dictionary:
-                    # add (correct) word to delete's suggested correction list
                     self.dictionary[item][0].append(w)
                 else:
-                    # note frequency of word in corpus is not incremented
                     self.dictionary[item] = ([w], 0)
 
         return new_real_word_added
@@ -158,21 +146,10 @@ class SymSpell:
         Returns:
             dictionary (dict): spell check dictionary
         """
-        total_word_count = len(words_counter)
         unique_word_count = 0
-        # start_time = time.time()
-        spellcorrection_logger.info("Creating spell check dictionary...")
-
         for word, count in tqdm_notebook(words_counter.items()):
             if self.create_dictionary_entry(word, count):
                 unique_word_count += 1
-        # run_time = time.time() - start_time
-        spellcorrection_logger.info("%.2f seconds to run" % run_time)
-        spellcorrection_logger.info("total words processed: %i" % total_word_count)
-        spellcorrection_logger.info("total unique words in corpus: %i" % unique_word_count)
-        spellcorrection_logger.info("total items in dictionary (corpus words & deletions): %i" % len(self.dictionary))
-        spellcorrection_logger.info("edit distance for deletions: %i" % self.max_edit_distance)
-        spellcorrection_logger.info("length of longest word in corpus: %i" % self.longest_word_length)
         return self.dictionary
 
     def get_suggestions(self, string, silent=False):

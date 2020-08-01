@@ -160,13 +160,13 @@ class SymSpell:
         """
         total_word_count = len(words_counter)
         unique_word_count = 0
-        start_time = time.time()
+        # start_time = time.time()
         spellcorrection_logger.info("Creating spell check dictionary...")
 
         for word, count in tqdm_notebook(words_counter.items()):
             if self.create_dictionary_entry(word, count):
                 unique_word_count += 1
-        run_time = time.time() - start_time
+        # run_time = time.time() - start_time
         spellcorrection_logger.info("%.2f seconds to run" % run_time)
         spellcorrection_logger.info("total words processed: %i" % total_word_count)
         spellcorrection_logger.info("total unique words in corpus: %i" % unique_word_count)

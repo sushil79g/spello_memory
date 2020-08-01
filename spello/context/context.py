@@ -114,6 +114,7 @@ class ContextModel(object):
         for tup in tqdm_notebook(model_dict_count):
             model_dict[tup] = model_dict_count[tup] / intermidiate
         del intermidiate
+        del sentences
         print('class attribute')
         self.model_dict = dict(model_dict)
         self.model_dict_count = dict(model_dict_count)

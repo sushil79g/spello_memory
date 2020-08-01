@@ -1,7 +1,7 @@
 import re
 import time
 import logging
-
+from tqdm import tqdm_notebook
 from spello.utils import dameraulevenshtein, SpellSuggestions
 
 spellcorrection_logger = logging.getLogger('spellcorrection')
@@ -131,12 +131,11 @@ class SymSpell:
         unique_word_count = 0
         start_time = time.time()
         spellcorrection_logger.info("Creating spell check dictionary...")
+        print("spell check dictionary")
         punctuation = r""",+:?!"()!'.%[]"""
         pattern = re.compile(re.escape(punctuation))
-        for line in lines:
-            line = pattern.sub(' ', line.lower().strip())
-            words = line.lower().strip().split()
-            for word in words:
+        for line in tqdm_notebook(lines):
+            for word in pattern.sub(' ', line.lower().strip()).lower().strip().split():
                 total_word_count += 1
                 if self.create_dictionary_entry(word):
                     unique_word_count += 1
@@ -164,7 +163,7 @@ class SymSpell:
         start_time = time.time()
         spellcorrection_logger.info("Creating spell check dictionary...")
 
-        for word, count in words_counter.items():
+        for word, count in tqdm_notebook(words_counter.items()):
             if self.create_dictionary_entry(word, count):
                 unique_word_count += 1
         run_time = time.time() - start_time

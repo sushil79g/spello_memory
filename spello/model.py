@@ -157,7 +157,7 @@ class SpellCorrectionModel(object):
 
         logger.debug("Spello training completed successfully ...")
 
-    def train_save_context(data):
+    def train_save_context(self,data):
         data = [get_clean_text(text) for text in data]
         logger.debug("Context model training started ...")
         self.context_train(data)
@@ -165,7 +165,7 @@ class SpellCorrectionModel(object):
         with open('context_model.pkl', 'wb') as file:
             pickle.dump(self.context_model, file)
 
-    def train_save_symspell(data):
+    def train_save_symspell(self,data):
         data = [get_clean_text(text) for text in data]
         data = dict(Counter(" ".join(data).strip().split()))
         data = {word: count for word, count in data.items()
@@ -175,7 +175,7 @@ class SpellCorrectionModel(object):
         with open('context_model.pkl', 'wb') as file:
             pickle.dump(self.symspell_model, file)
 
-    def train_save_phoneme_mode(data):
+    def train_save_phoneme_mode(self,data):
         data = [get_clean_text(text) for text in data]
         data = dict(Counter(" ".join(data).strip().split()))
         data = {word: count for word, count in data.items()

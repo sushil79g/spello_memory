@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 from itertools import combinations
 from typing import Dict, List, Tuple, NamedTuple, Union
-
+from tqdm import tqdm
 from spello.utils import get_ngrams
 
 MAX_COUNT_ALLOWED = 100
@@ -104,8 +104,8 @@ class ContextModel(object):
         model_dict_count: Dict[Tuple[str, ...], Union[float, int]] = defaultdict(int)
         model_dict: Dict[Tuple[str, ...], float] = defaultdict(float)
         print('model_dict_count')
-        for sentence_tokens in sentences:
-            for (pair, _) in get_context_pairs(sentence_tokens):
+        for sentence_tokens in tqdm(sentences):
+            for (pair, _) in tqdm(get_context_pairs(sentence_tokens)):
                 model_dict_count[pair] = min(model_dict_count[pair] + 1, MAX_COUNT_ALLOWED)
         print('default probability')
         self.default_prob = (min(model_dict_count.values()) / float(sum( model_dict_count.values()))) * 0.5
@@ -164,7 +164,7 @@ class ContextModel(object):
             self,
             sentence: str,
             suggestions_dict: Dict[str, List[str]]
-    ) -> (str, Dict[str, str]):
+    ) -> Tuple[str, Dict[str, str]]:
         """
         Get most probable suggestion for miss-spelled words from suggestions list
         Args:

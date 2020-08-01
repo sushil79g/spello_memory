@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 from itertools import combinations
 from typing import Dict, List, Tuple, NamedTuple, Union
-from tqdm import tqdm
+from tqdm import tqdm_notebook
 from spello.utils import get_ngrams
 
 MAX_COUNT_ALLOWED = 100
@@ -104,8 +104,8 @@ class ContextModel(object):
         model_dict_count: Dict[Tuple[str, ...], Union[float, int]] = defaultdict(int)
         model_dict: Dict[Tuple[str, ...], float] = defaultdict(float)
         print('model_dict_count')
-        for sentence_tokens in tqdm(sentences):
-            for (pair, _) in get_context_pairs(sentence_tokens):
+        for sentence_tokens in tqdm_notebook(sentences):
+            for (pair, _) in tqdm_notebookX(get_context_pairs(sentence_tokens)):
                 model_dict_count[pair] = min(model_dict_count[pair] + 1, MAX_COUNT_ALLOWED)
         print('default probability')
         self.default_prob = (min(model_dict_count.values()) / float(sum( model_dict_count.values()))) * 0.5

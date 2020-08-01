@@ -110,7 +110,7 @@ class ContextModel(object):
         print('default probability')
         self.default_prob = (min(model_dict_count.values()) / float(sum( model_dict_count.values()))) * 0.5
         print('model dict')
-        for tup in model_dict_count:
+        for tup in tqdm_notebook(model_dict_count):
             model_dict[tup] = model_dict_count[tup] / float(sum( model_dict_count.values()))
         print('class attribute')
         self.model_dict = dict(model_dict)

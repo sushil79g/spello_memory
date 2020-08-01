@@ -157,6 +157,35 @@ class SpellCorrectionModel(object):
 
         logger.debug("Spello training completed successfully ...")
 
+    def train_save_context(data):
+        data = [get_clean_text(text) for text in data]
+        logger.debug("Context model training started ...")
+        self.context_train(data)
+        print('context completed')
+        with open('context_model.pkl', 'wb') as file:
+            pickle.dump(self.context_model, file)
+
+    def train_save_symspell(data):
+        data = [get_clean_text(text) for text in data]
+        data = dict(Counter(" ".join(data).strip().split()))
+        data = {word: count for word, count in data.items()
+                         if self.config.min_length_for_spellcorrection}
+        logger.debug("Symspell training started ...")
+        self.symspell_train(data)
+        with open('context_model.pkl', 'wb') as file:
+            pickle.dump(self.symspell_model, file)
+
+    def train_save_phoneme_mode(data):
+        data = [get_clean_text(text) for text in data]
+        data = dict(Counter(" ".join(data).strip().split()))
+        data = {word: count for word, count in data.items()
+                         if self.config.min_length_for_spellcorrection}
+        self.phoneme_train(data)
+        logger.debug("Spello training completed successfully ...")
+        with open('phoneme_model.pkl', 'wb') as file:
+            pickle.dump(self.phoneme_model,file)
+    
+    
     def _correct_word(self, word):
         """
         Suggest words for given word, follow below steps:

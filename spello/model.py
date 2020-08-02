@@ -168,11 +168,11 @@ class SpellCorrectionModel(object):
     def train_save_symspell(self,data):
         data = [get_clean_text(text) for text in data]
         data = dict(Counter(" ".join(data).strip().split()))
-        data = {word: count for word, count in data.items()
-                         if self.config.min_length_for_spellcorrection}
+        # data = {word: count for word, count in data.items()
+        #                  if self.config.min_length_for_spellcorrection} #3
         logger.debug("Symspell training started ...")
         self.symspell_train(data)
-        with open('context_model.pkl', 'wb') as file:
+        with open('symspell_model.pkl', 'wb') as file:
             pickle.dump(self.symspell_model, file)
 
     def train_save_phoneme_mode(self,data):
@@ -216,7 +216,7 @@ class SpellCorrectionModel(object):
         phoneme_suggestions = phoneme.suggestions
 
         symspell = self.symspell_model.spell_correct(word)
-        if symspell.is_correct:
+        if symspell.is_correct: 
             return None
         symspell_suggestions = symspell.suggestions
 

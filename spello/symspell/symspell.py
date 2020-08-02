@@ -27,8 +27,8 @@ class SymSpell:
             verbose (int): verbose level
             script (str): language script
         """
-        self.max_edit_distance = max_edit_distance
-        self.verbose = verbose
+        self.max_edit_distance = max_edit_distance #3
+        self.verbose = verbose #1
         # 0: top suggestion
         # 1: all suggestions of smallest edit distance
         # 2: all suggestions <= max_edit_distance (slower, no early termination)
@@ -62,7 +62,7 @@ class SymSpell:
             max_edit_distance = 3
         else:
             return [w]
-        for d in range(max_edit_distance):
+        for _ in range(max_edit_distance):
             temp_queue = []
             for word in queue:
                 if len(word) > 1:
@@ -73,6 +73,7 @@ class SymSpell:
                         if word_minus_c not in temp_queue:
                             temp_queue.append(word_minus_c)
             queue = temp_queue
+        del queue, temp_queue, word_minus_c, max_edit_distance, c, w
         return deletes
 
     def create_dictionary_entry(self, w, count=None):
@@ -85,7 +86,6 @@ class SymSpell:
         Returns:
             new_real_word_added (bool): whether word was added to dictionary i.e. first appearance of word in corpus
         """
-        new_real_word_added = False
         if w in self.dictionary:
             if count:
                 self.dictionary[w] = (self.dictionary[w][0], count)
@@ -96,14 +96,13 @@ class SymSpell:
             self.longest_word_length = max(self.longest_word_length, len(w))
 
         if self.dictionary[w][1] > 0:
-            new_real_word_added = True
             for item in self.get_deletes_list(w):
                 if item in self.dictionary:
                     self.dictionary[item][0].append(w)
                 else:
                     self.dictionary[item] = ([w], 0)
 
-        return new_real_word_added
+        return True
 
     def create_dictionary_from_sentences(self, lines):
         """
@@ -146,10 +145,9 @@ class SymSpell:
         Returns:
             dictionary (dict): spell check dictionary
         """
-        unique_word_count = 0
         for word, count in tqdm_notebook(words_counter.items()):
             if self.create_dictionary_entry(word, count):
-                unique_word_count += 1
+                pass
         return self.dictionary
 
     def get_suggestions(self, string, silent=False):

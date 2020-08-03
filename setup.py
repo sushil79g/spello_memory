@@ -1,9 +1,9 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("README.md", "r",encoding="utf8") as fh:
     long_description = fh.read()
 
-with open('requirements.txt') as f:
+with open('requirements.txt',encoding="utf8") as f:
     require_packages = [line[:-1] if line[-1] == '\n' else line for line in f]
 
 setuptools.setup(
